@@ -1,13 +1,17 @@
-import { Skeleton } from '@mui/material';
+import { Button, Skeleton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 import Axios from '../../api/index';
 import './home.css';
 const Home = () => {
 	const [ data, setData ] = useState([]);
-	useEffect(() => {
-		getdata();
-	}, []);
+	const [ refresh, setRefresh ] = useState(true);
+	useEffect(
+		() => {
+			getdata();
+		},
+		[ refresh ]
+	);
 
 	const getdata = async () => {
 		const res = await Axios.get();
@@ -31,10 +35,7 @@ const Home = () => {
 		{
 			field: 'id',
 			headerName: 'Id',
-			width: 130,
-			renderCell: (e) => {
-				return data.length != 0 ? <div>{e.row.name}</div> : <div>loosu</div>;
-			}
+			width: 130
 		},
 		{
 			field: 'name',
@@ -46,69 +47,20 @@ const Home = () => {
 		{ field: 'email', headerName: 'Email', width: 230 },
 		{ field: 'cell', headerName: 'Cell', width: 230 }
 	];
-	const simmercolumns = [
-		{
-			field: 'id',
-			headerName: 'Id',
-			width: 130,
-			renderCell: (e) => {
-				return <Skeleton variant="rectangular" width={20} height={18} />;
-			}
-		},
-		{
-			field: 'name',
-			headerName: 'Name',
-			width: 230,
-			renderCell: (e) => {
-				return <Skeleton variant="rectangular" width={20} height={18} />;
-			}
-		},
 
-		{
-			field: 'gender',
-			headerName: 'Gender',
-			width: 130,
-			renderCell: (e) => {
-				return <Skeleton variant="rectangular" width={20} height={18} />;
-			}
-		},
-		{
-			field: 'email',
-			headerName: 'Email',
-			width: 230,
-			renderCell: (e) => {
-				return <Skeleton variant="rectangular" width={20} height={18} />;
-			}
-		},
-		{
-			field: 'cell',
-			headerName: 'Cell',
-			width: 230,
-			renderCell: (e) => {
-				return <Skeleton variant="rectangular" width={20} height={18} />;
-			}
-		}
-	];
-	const simmerdata = [
-		{ name: 'sample', id: '1', gender: 'male', email: 'email', cell: '000' },
-		{ name: 'sample', id: '2', gender: 'male', email: 'email', cell: '000' },
-		{ name: 'sample', id: '3', gender: 'male', email: 'email', cell: '000' },
-		{ name: 'sample', id: '4', gender: 'male', email: 'email', cell: '000' },
-		{ name: 'sample', id: '5', gender: 'male', email: 'email', cell: '000' }
-	];
 	return (
 		<div className="homecontainer">
-			{data.length}
-			<div className="tables">
-				{data.length === 0 ? (
-					<DataGrid rows={simmerdata} columns={columns} pageSize={5} />
-				) : (
+			<Button variant="outlined" onClick={() => setRefresh(!refresh)}>
+				Refresh
+			</Button>
+			<div className="tablescontainer">
+				<div className="tables">
 					<DataGrid rows={data} columns={columns} pageSize={5} />
-				)}
-			</div>
+				</div>
 
-			<div className="tiles">
-				<DataGrid rows={data} columns={columns} pageSize={5} />
+				<div className="tiles">
+					<div>title</div>
+				</div>
 			</div>
 		</div>
 	);
